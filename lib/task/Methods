@@ -26,3 +26,26 @@ void _updateTask() async {
   await ref.read(taskProvider.notifier).updateTask(updatedTask);
   Navigator.pop(context);
 }
+Future<void> markTaskAsComplete(int index) async {
+  final prefs = await SharedPreferences.getInstance();
+  final String? tasksJson = prefs.getString('tasks');
+
+  if (tasksJson != null) {
+    final List<dynamic> tasksList = jsonDecode(tasksJson);
+    final List<Task> tasks = tasksList.map((task) => Task.fromJson(task)).toList();
+
+    // Update isCompleted for the task at the given index
+    if (index >= 0 && index < tasks.length) {
+      tasks[index] = tasks[index].copyWith(isCompleted: true);
+    }
+
+    // Save updated list back to SharedPreferences
+    final String updatedTasksJson = jsonEncode(tasks.map((task) => task.toJson()).toList());
+    await prefs.setString('tasks', updatedTasksJson);
+
+    // Notify listeners if you're using ChangeNotifier
+    notifyListeners();
+  } else {
+    print('No tasks found to update');
+  }
+}
