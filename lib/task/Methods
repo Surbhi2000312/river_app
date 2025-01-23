@@ -1,0 +1,28 @@
+Future<void> getAllTasks() async {
+  final prefs = await SharedPreferences.getInstance();
+  final String? tasksJson = prefs.getString('tasks');
+
+  if (tasksJson != null) {
+    final List<dynamic> tasksList = jsonDecode(tasksJson);
+    final List<Task> tasks = tasksList.map((task) => Task.fromJson(task)).toList();
+
+    // Print all tasks to console
+    for (var task in tasks) {
+      print('Task: ${task.toJson()}');
+    }
+  } else {
+    print('No tasks found in SharedPreferences');
+  }
+}
+ref.read(taskProvider).getAllTasks();
+
+void _updateTask() async {
+  final updatedTask = widget.task.copyWith(
+    name: _nameController.text,
+    date: _dateController.text,
+    time: _timeController.text,
+  );
+
+  await ref.read(taskProvider.notifier).updateTask(updatedTask);
+  Navigator.pop(context);
+}
