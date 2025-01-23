@@ -31,4 +31,16 @@ class TaskNotifier extends StateNotifier<List<Task>> {
     print("set => $tasksJson");
     await prefs.setString('tasks', tasksJson);
   }
+
+  Future<void> updateTask(Task updatedTask) async {
+    state = state.map((task) {
+      if (task.id == updatedTask.id) {
+        return updatedTask; // Replace the task with the updated one
+      }
+      return task;
+    }).toList();
+
+    await saveTasks(); // Save updated list to SharedPreferences
+  }
+
 }

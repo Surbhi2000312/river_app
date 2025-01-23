@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:river_app/task/edit_task.dart';
 import 'task_provider.dart'; // Import your provider
 import 'add_data.dart'; // Import AddData
 
@@ -37,14 +38,29 @@ class _ShowDataState extends ConsumerState<ShowData> {
           : ListView.builder(
         itemCount: tasks.length,
         itemBuilder: (context, index) {
-          final task = tasks[index];
-          return ListTile(
-            title: Text(task.name ?? 'No Name'),
-            subtitle: Text('Date: ${task.date}, Time: ${task.time}'),
-            trailing: task.isCompleted == true
-                ? Icon(Icons.check_circle, color: Colors.green)
-                : Icon(Icons.radio_button_unchecked, color: Colors.grey),
+          final taskDetail = tasks[index];
+          return InkWell(
+            onTap: (){
+              Navigator.push(context,
+              MaterialPageRoute(builder: (context) =>  EditData(task:  taskDetail)));
+            },
+            child: ListTile(
+              title: Text(taskDetail.name ?? 'No Name'),
+              subtitle: Text('Date: ${taskDetail.date}, Time: ${taskDetail.time}'),
+              trailing: taskDetail.isCompleted == true
+                  ? Icon(Icons.check_circle, color: Colors.green)
+                  : Icon(Icons.radio_button_unchecked, color: Colors.grey),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditData(task: taskDetail),
+                  ),
+                );
+              },
+            ),
           );
+
         },
       ),
       floatingActionButton: FloatingActionButton(

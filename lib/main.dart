@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:river_app/json/Task.dart';
 import 'package:river_app/task/show_data.dart';
 import 'package:river_app/widgets/edt.dart';
 
 void main() {
   runApp(ProviderScope(child: TodoApp()));
+  Task task = Task(id: "1", name: "Test", date: "2024-01-01", time: "10:00", isCompleted: 'false');
+  Task updatedTask = task.copyWith(name: "Updated Name");
 }
 
 class TodoApp extends StatelessWidget {

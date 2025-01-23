@@ -32,4 +32,22 @@ class Task {
     return map;
   }
 
+
+
+  Task copyWith({
+    String? id,
+    String? name,
+    String? date,
+    String? time,
+    String? isCompleted,
+  }) {
+    return Task(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      date: date ?? this.date,
+      time: time ?? this.time,
+      isCompleted: isCompleted ?? this.isCompleted,
+    );
+  }
+
 }
