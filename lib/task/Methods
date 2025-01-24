@@ -75,4 +75,27 @@ DropdownButton<Model>(
     }).toList();
   },
 );
+Future<void> deleteTask(int index) async {
+  final prefs = await SharedPreferences.getInstance();
+  final String? tasksJson = prefs.getString('tasks');
+
+  if (tasksJson != null) {
+    final List<dynamic> tasksList = jsonDecode(tasksJson);
+    final List<Task> tasks = tasksList.map((task) => Task.fromJson(task)).toList();
+
+    // Remove the task at the given index
+    if (index >= 0 && index < tasks.length) {
+      tasks.removeAt(index);
+    }
+
+    // Save updated list back to SharedPreferences
+    final String updatedTasksJson = jsonEncode(tasks.map((task) => task.toJson()).toList());
+    await prefs.setString('tasks', updatedTasksJson);
+
+    // Notify listeners if you're using ChangeNotifier
+    notifyListeners();
+  } else {
+    print('No tasks found to delete');
+  }
+}
 
