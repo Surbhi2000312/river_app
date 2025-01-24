@@ -49,3 +49,30 @@ Future<void> markTaskAsComplete(int index) async {
     print('No tasks found to update');
   }
 }
+// drop down Button 
+DropdownButton<Model>(
+  value: selectedModel,
+  onChanged: (Model? newValue) {
+    setState(() {
+      selectedModel = newValue!;
+    });
+  },
+  items: models.map<DropdownMenuItem<Model>>((Model model) {
+    return DropdownMenuItem<Model>(
+      value: model,
+      child: Row(
+        children: [
+          Icon(model.icon),
+          SizedBox(width: 10),
+          Text(model.name),
+        ],
+      ),
+    );
+  }).toList(),
+  selectedItemBuilder: (BuildContext context) {
+    return models.map<Widget>((Model model) {
+      return Text(model.name);
+    }).toList();
+  },
+);
+
