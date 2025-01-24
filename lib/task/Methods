@@ -98,4 +98,60 @@ Future<void> deleteTask(int index) async {
     print('No tasks found to delete');
   }
 }
+Future<void> deleteTaskById(String id) async {
+  final prefs = await SharedPreferences.getInstance();
+  final String? tasksJson = prefs.getString('tasks');
+
+  if (tasksJson != null) {
+    final List<dynamic> tasksList = jsonDecode(tasksJson);
+    final List<Task> tasks = tasksList.map((task) => Task.fromJson(task)).toList();
+
+    // Remove task with matching id
+    tasks.removeWhere((task) => task.id == id);
+
+    // Save updated tasks back to SharedPreferences
+    final String updatedTasksJson = jsonEncode(tasks.map((task) => task.toJson()).toList());
+    await prefs.setString('tasks', updatedTasksJson);
+
+    // Notify listeners to update UI
+    notifyListeners();
+  } else {
+    print('No tasks found to delete');
+  }
+}
+
+class EditData extends StatelessWidget {
+  final Task task;
+
+  EditData({required this.task});
+
+  @override
+  Widget build(BuildContext context) {
+    final taskProvider = ref.read(taskProvider.notifier);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Edit Task'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.delete, color: Colors.red),
+            onPressed: () async {
+              await taskProvider.deleteTaskById(task.id!); // Delete task by id
+              Navigator.pop(context); // Navigate back to ShowData
+            },
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            // Your other fields for editing the task
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
