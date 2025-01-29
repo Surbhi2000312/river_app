@@ -13,10 +13,15 @@ class AddTaskPage extends ConsumerStatefulWidget {
 }
 
 class _TaskPageState extends ConsumerState<AddTaskPage> {
+
+
+
   Category? selectedCategory;
   TextEditingController categoryController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final categoryNotifier = ref.read(categoryProvider.notifier);
+
     return Scaffold(
 
       appBar: AppBar(title: getBlackColor(text: 'New task'),),
@@ -41,19 +46,23 @@ class _TaskPageState extends ConsumerState<AddTaskPage> {
                   });
                 },
               ),
-            )
+            ),
+            IconButton(onPressed: (){
+              
+            }, icon: Icon(Icons.add)),
 
           ],
         ),
       ),
 
       floatingActionButton: FloatingActionButton(onPressed: (){
-
+        categoryNotifier.getAll();
       },child: Icon(Icons.arrow_forward_sharp),
       ),
     );
   }
 }
+
 void showAddCategoryDialog(BuildContext context, WidgetRef ref) {
   TextEditingController categoryController = TextEditingController();
 
