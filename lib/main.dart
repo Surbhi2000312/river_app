@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:river_app/json/Task.dart';
-import 'package:river_app/other_ui_like_counter/practise_one.dart';
-import 'package:river_app/task/show_data.dart';
-import 'package:river_app/widgets/edt.dart';
+import 'package:river_app/category_and_task/task_page.dart';
+
+
+
 
 void main() {
   runApp(ProviderScope(child: TodoApp()));
@@ -47,7 +47,7 @@ class TodoApp extends StatelessWidget {
         // textTheme: Typography(platform: TargetPlatform.iOS).white,
       ),
       // home: ShowData(),
-      home: PractiseOne(),
+      home: TaskPage(),
     );
   }
 }
