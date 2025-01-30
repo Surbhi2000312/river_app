@@ -153,5 +153,23 @@ class EditData extends StatelessWidget {
     );
   }
 }
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+
+Future<void> removeTask(int taskId) async {
+  final prefs = await SharedPreferences.getInstance();
+  String? taskJson = prefs.getString('tasks');
+
+  if (taskJson != null) {
+    List<Map<String, dynamic>> taskList = List<Map<String, dynamic>>.from(jsonDecode(taskJson));
+
+    // Remove task with the given ID
+    taskList.removeWhere((task) => task['id'] == taskId);
+
+    // Save the updated list back
+    await prefs.setString('tasks', jsonEncode(taskList));
+  }
+}
+
 
 
