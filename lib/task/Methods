@@ -172,6 +172,59 @@ Future<void> removeTask(int taskId) async {
 }
 
 
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class Category {
+  Category({this.name, this.length, this.dueLength});
+
+  String? name;
+  String? length;
+  String? dueLength;
+
+  factory Category.fromJson(Map<String, dynamic> json) {
+    return Category(
+      name: json['name'],
+      length: json['length'],
+      dueLength: json['dueLength'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'length': length,
+      'dueLength': dueLength,
+    };
+  }
+}
+
+// SharedPreferences se list ko retrieve karke Category list me convert karna
+Future<void> getCategoriesFromPrefs() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  // `SharedPreferences` se JSON string list retrieve karna
+  List<String>? jsonStringList = prefs.getStringList("categories_key");
+
+  if (jsonStringList != null) {
+    // JSON string list ko `Category` object list me convert karna
+    List<Category> categories = jsonStringList
+        .map((jsonString) => Category.fromJson(jsonDecode(jsonString)))
+        .toList();
+
+    // Updated list print karna
+    print("\nRetrieved Categories:");
+    categories.forEach((cat) {
+      print(jsonEncode(cat.toJson())); // JSON format me print
+    });
+  } else {
+    print("No categories found in SharedPreferences.");
+  }
+}
+
+void main() {
+  getCategoriesFromPrefs();
+}
 
 
 
