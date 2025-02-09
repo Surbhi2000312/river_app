@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:river_app/category_and_task/task_page.dart';
+import 'package:river_app/practice_ui/flutter_toast_n_snackBar.dart';
+import 'package:river_app/task/show_data.dart';
+import 'package:river_app/todo_list_app/screens/todo_list_home.dart';
 
 
-
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized(); // Ensure plugins are initialized
   runApp(ProviderScope(child: TodoApp()));
   // Task task = Task(id: "1", name: "Test", date: "2024-01-01", time: "10:00", isCompleted: 'false');
   // Task updatedTask = task.copyWith(name: "Updated Name");
@@ -17,6 +22,8 @@ class TodoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      builder: FToastBuilder(),
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         appBarTheme: AppBarTheme(
@@ -43,11 +50,12 @@ class TodoApp extends StatelessWidget {
           bodyMedium: TextStyle(fontSize: 25).apply(color: Colors.white),
           bodyLarge: TextStyle(fontSize: 25).apply(color: Colors.white)
         ),
-        // primaryTextTheme: Typography(platform: TargetPlatform.iOS).white,
-        // textTheme: Typography(platform: TargetPlatform.iOS).white,
+
       ),
       // home: ShowData(),
-      home: TaskPage(),
+      // home: TodoListHomeScreen(),
+      // practice UI component
+      home: PracticeToastSnack(),
     );
   }
 }
@@ -55,65 +63,4 @@ class TodoApp extends StatelessWidget {
 
 
 
-/*
-// Todo model
-class Todo {
-  final int id;
-  final String workName;
-  final DateTime dateTime;
-  bool isCompleted;
 
-  Todo({
-    required this.id,
-    required this.workName,
-    required this.dateTime,
-    this.isCompleted = false,
-  });
-}
-
-// Riverpod provider for managing todos
-final todoListProvider = StateNotifierProvider<TodoListNotifier, List<Todo>>(
-      (ref) => TodoListNotifier(),
-);
-
-class TodoListNotifier extends StateNotifier<List<Todo>> {
-  TodoListNotifier() : super([]);
-
-  void addTodo(Todo todo) {
-    state = [...state, todo];
-  }
-
-  void updateTodo(int id, String workName, DateTime dateTime) {
-    state = state.map((todo) {
-      if (todo.id == id) {
-        return Todo(
-          id: todo.id,
-          workName: workName,
-          dateTime: dateTime,
-          isCompleted: todo.isCompleted,
-        );
-      }
-      return todo;
-    }).toList();
-  }
-
-  void toggleComplete(int id) {
-    state = state.map((todo) {
-      if (todo.id == id) {
-        return Todo(
-          id: todo.id,
-          workName: todo.workName,
-          dateTime: todo.dateTime,
-          isCompleted: !todo.isCompleted,
-        );
-      }
-      return todo;
-    }).toList();
-  }
-
-  void deleteTodoById(int id) {
-    state = state.where((todo) => todo.id != id).toList();
-  }
-}
-
- */
