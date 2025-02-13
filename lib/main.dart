@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:river_app/category_and_task/task_page.dart';
+
 import 'package:river_app/practice_ui/flutter_toast_n_snackBar.dart';
-import 'package:river_app/task/show_data.dart';
-import 'package:river_app/todo_list_app/screens/todo_list_home.dart';
+import 'package:river_app/practice_ui/image_upload.dart';
 
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -55,7 +54,8 @@ class TodoApp extends StatelessWidget {
       // home: ShowData(),
       // home: TodoListHomeScreen(),
       // practice UI component
-      home: PracticeToastSnack(),
+      home: ImageUpload(),
+      // home: PracticeToastSnack(),
     );
   }
 }
