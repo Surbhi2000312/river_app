@@ -1,0 +1,138 @@
+
+
+import 'package:pinput/pinput.dart';
+
+class OtpPage extends GetView<LoginController>{
+
+  final LoginController _loginController = Get.find();
+
+  String? mobileNo;
+  String? emailId ;
+  @override
+  Widget build(BuildContext context) {
+
+    try {
+      emailId = Get.arguments[0];
+      mobileNo = Get.arguments[1];
+    }catch(exp){
+      print(exp);
+    }
+    return Scaffold(
+      appBar:getAppBarTittle("Otp Page"),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox( height: 78,),
+
+          pinPut(),
+
+          SizedBox( height: 28,),
+          SizedBox(
+            height: 48,
+            width: double.infinity,
+            child: ElevatedButton(onPressed: (){
+              _verifyOtp();
+            }, child: Text("Login")),
+
+          ),
+        ],
+      )
+    );
+  }
+
+
+  final pinController = TextEditingController();
+  final focusNode = FocusNode();
+  final formKey = GlobalKey<FormState>();
+
+  void changePin(String value) => _loginController.otp.value = value;
+
+  _verifyOtp() async {
+    // print( "${pinController.text}   :  ${_loginController.otp.value}");
+    if(pinController.text.length == 5) {
+      changePin(pinController.text);
+      await LoginController.to.validateOtp(mobileNo.toString(),pinController.text.toString());
+    }
+  }
+
+  Form pinPut(){
+    const focusedBorderColor = Color.fromRGBO(10, 169, 82, 1);
+    const fillColor = Color.fromRGBO(242, 242, 242, 1);
+    // const borderColor = Color.fromRGBO(23, 171, 144, 0.4);
+
+    final defaultPinTheme = PinTheme(
+      width: Get.width * .2,
+      height: 56,
+      textStyle: const TextStyle(
+        fontSize: 22,
+        color: Color.fromRGBO(30, 60, 87, 1),
+      ),
+      decoration: BoxDecoration(
+        color: fillColor,
+        borderRadius: BorderRadius.circular(8),
+        // border: Border.all(color: borderColor),
+      ),
+    );
+
+    /// Optionally you can use form to validate the Pinput
+    return Form(
+      key: formKey,
+      child: Directionality(
+        // Specify direction if desired
+        textDirection: TextDirection.ltr,
+        child: Pinput(
+          controller: pinController,
+          focusNode: focusNode,
+
+          defaultPinTheme: defaultPinTheme,
+          length: 5,
+          separatorBuilder: (index) => const SizedBox(width: 8),
+          validator: (value) {
+          },
+
+          hapticFeedbackType: HapticFeedbackType.lightImpact,
+          onCompleted: (pin) {
+            debugPrint('onCompleted: $pin');
+          },
+          onChanged: (value) {
+            debugPrint('onChanged: $value');
+            LoginController.to.changePin;
+          },
+          cursor: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(bottom: 9),
+                width: 22,
+                height: 1,
+                // color: focusedBorderColor,
+              ),
+            ],
+          ),
+          focusedPinTheme: defaultPinTheme.copyWith(
+            decoration: defaultPinTheme.decoration!.copyWith(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: focusedBorderColor),
+            ),
+          ),
+          submittedPinTheme: defaultPinTheme.copyWith(
+            decoration: defaultPinTheme.decoration!.copyWith(
+              color: fillColor,
+              borderRadius: BorderRadius.circular(8),
+              // border: Border.all(color: focusedBorderColor),
+            ),
+          ),
+          errorPinTheme: defaultPinTheme.copyBorderWith(
+            border: Border.all(color: Colors.redAccent),
+          ),
+        ),
+      ),
+    );
+  }
+
+
+
+
+
+}
