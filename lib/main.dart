@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:river_app/other_ui_like_counter/drop_down_practice.dart';
 
 import 'package:river_app/practice_ui/flutter_toast_n_snackBar.dart';
 import 'package:river_app/practice_ui/image_upload.dart';
@@ -54,7 +55,7 @@ class TodoApp extends StatelessWidget {
       // home: ShowData(),
       // home: TodoListHomeScreen(),
       // practice UI component
-      home: ImageUpload(),
+      home: DropDownPractice(),
       // home: PracticeToastSnack(),
     );
   }
