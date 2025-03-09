@@ -19,10 +19,10 @@ class _DropDownPracticeState extends State<DropDownPractice> {
   String? valueNum;
 
   List<Person> _listOfPerson = [
-    Person('name1', 'Flutter', 'email@gmail.com'),
-    Person('name2', 'React Native', 'email@gmail.com'),
-    Person('name3', 'React Js', 'email@gmail.com'),
-    Person('name4', 'Android', 'email@gmail.com'),
+    Person('Mohit Sharma', 'Flutter', 'email@gmail.com'),
+    Person('Kanak Sharma', 'React Native', 'email@gmail.com'),
+    Person('Surbhi Paliwal', 'React Js', 'email@gmail.com'),
+    Person('Sanjay Prajapat', 'Android', 'email@gmail.com'),
   ];
   Person? valuePerson;
 
@@ -34,6 +34,7 @@ class _DropDownPracticeState extends State<DropDownPractice> {
   }
 
   final dropDownKey = GlobalKey<DropdownSearchState>();
+  final dropDownKeyMultiSelectionString = GlobalKey<DropdownSearchState>();
   final dropDownKeySearchString = GlobalKey<DropdownSearchState>();
 
   bool able = true;
@@ -51,10 +52,9 @@ class _DropDownPracticeState extends State<DropDownPractice> {
             child: Column(
                     
               children: [
-            
-                
-                DropdownSearch<String>.multiSelection(
-                  key: dropDownKey,
+
+                DropdownSearch<Person>.multiSelection(
+                  key: dropDownKeyMultiSelectionString,
                   enabled: true,
 
 
@@ -63,30 +63,32 @@ class _DropDownPracticeState extends State<DropDownPractice> {
                   onChanged: (v){},
 
                   // selectedItem: "Menu",
-                  items: (filter, infiniteScrollProps) => listOfNum,
+                  items:(filter, infiniteScrollProps)=> _listOfPerson,
+                  compareFn: (i, s) => i.name == s.name,
+                  filterFn: (item, filter) => filter == '' || item.name.toLowerCase().contains(filter.toLowerCase()),
 
 
                   decoratorProps: DropDownDecoratorProps(
 
-            
+
                     baseStyle: TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 18,
+                      color: Colors.red,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 18,
                     ),
-            
+
                     decoration: InputDecoration(
 
 
-                      filled: true,
-                      fillColor: Colors.white,
-                      hintText: 'Hint: multiselection ',
-                      hintStyle: TextStyle(
-                        color:Colors.blueGrey
-                      ),
-                      border: InputBorder.none,
-                      isDense: true,
-                      contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 0)
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: 'Hint: multiselection ',
+                        hintStyle: TextStyle(
+                            color:Colors.blueGrey
+                        ),
+                        border: InputBorder.none,
+                        isDense: true,
+                        contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 0)
                     ),
                   ),
                   popupProps: PopupPropsMultiSelection.dialog(
@@ -100,19 +102,19 @@ class _DropDownPracticeState extends State<DropDownPractice> {
                         style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold, color: Colors.white70),
                       ),
                     ),
-            
+
                     showSearchBox: true,
                     searchDelay: Duration(milliseconds: 200),
                     searchFieldProps: TextFieldProps(
-                      padding:  EdgeInsets.all(10),
-                      style: TextStyle(fontSize: 16),
-                      decoration: InputDecoration(
-                        focusedBorder: getBorder(borderColor: Colors.white),
-                        enabledBorder: getBorder(borderColor: Colors.white),
-                      )
+                        padding:  EdgeInsets.all(10),
+                        style: TextStyle(fontSize: 16),
+                        decoration: InputDecoration(
+                          focusedBorder: getBorder(borderColor: Colors.white),
+                          enabledBorder: getBorder(borderColor: Colors.white),
+                        )
                     ),
-            
-            
+
+
                     dialogProps: DialogProps(
                       insetPadding: EdgeInsets.only(top: 20,left: 28,right: 28),
                       backgroundColor: Colors.blue,
@@ -121,44 +123,52 @@ class _DropDownPracticeState extends State<DropDownPractice> {
 
                     ),
 
+                    itemBuilder: (context, item, isDisabled, isSelected) => Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+
+                        children: [
+                          Text(
+                              item.name.toString(),
+                              style: TextStyle(color: Colors.white, fontSize: 18)
+                          ),
+                          SizedBox(width: 10,),
+                          Text(
+                              item.role.toString(),
+                              style: TextStyle(color: Colors.white, fontSize: 18)
+                          ),
+                        ],
+                      ),
+                    ),
+
                     checkBoxBuilder: (context , s ,t,selected){
 
                       return selected? Icon(Icons.check_box_outlined,color: Colors.white,)
                           :Icon(Icons.square_outlined,color: Colors.white,);
-                  },
-
-                    itemBuilder: (context, item, isDisabled, isSelected) => Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                          item,
-                          style: TextStyle(color: Colors.white, fontSize: 18)
-                      ),
-                    ),
-
+                    },
+                    emptyBuilder: (context , s){
+                      return Text('No data Available like this');
+                    }
 
                   ),
 
-
-
-                  dropdownBuilder: (context, selectedItem) {
+                  dropdownBuilder: (context, selectedItems) {
 
                     return Wrap(
                       spacing: 8.0,
-                      children: selectedItem.map((item) {
+                      children: selectedItems.map((item) {
                         return Chip(
                           padding: EdgeInsets.only(left: 6),
                           label: Row(
                             mainAxisSize:MainAxisSize.min,
                             children: [
-                              Text(item),
+                              Text(item.name),
                               InkWell(
                                 onTap: (){
-
-                                  List<String> updatedList = List.from(selectedItem);
-                                  updatedList.remove(item);
-
-
-                                  dropDownKey.currentState?.clear();
+                                  setState(() {
+                                    selectedItems.remove(item); // ✅ FIXED: Properly remove the item
+                                  });
+                                  dropDownKeyMultiSelectionString.currentState?.changeSelectedItems(selectedItems);
 
 
                                 },
@@ -172,49 +182,7 @@ class _DropDownPracticeState extends State<DropDownPractice> {
                       }).toList(),
                     );
                   },
-
-
-                ),
-
-                Stack(
-                  children: [
-                    InkWell(
-                      onTap: (){
-                        dropDownKey.currentState?.closeDropDownSearch();
-                        showAdaptiveDialog(context: context,
-                            builder: (BuildContext c){
-                              return AlertDialog(title: Text('beta'),);
-                            });
-                      },
-                      child: Container(
-                        width: 200,
-                        height: 200,
-                        color: Colors.red,
-                        child: Padding(
-                          padding: const EdgeInsets.all(50.0),
-                          child: InkWell(
-                            onTap: (){
-                              showAdaptiveDialog(context: context,
-                                  builder: (BuildContext c){
-                                      return AlertDialog(title: Text('data'),);
-                                  });
-
-                            },
-                            child: Container(
-                              height: 20,
-                              width: 20,
-                              color: Colors.yellow,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
                 )
-
-
-                    
-                    
               ],
             ),
           ),
@@ -329,6 +297,130 @@ class _DropDownPracticeState extends State<DropDownPractice> {
 
           )
       ),
+    );
+  }
+
+  getDropDownSearchMultiSelectionString(){
+    return DropdownSearch<String>.multiSelection(
+      key: dropDownKeyMultiSelectionString,
+      enabled: true,
+
+
+
+      onSaved: (v){},
+      onChanged: (v){},
+
+      // selectedItem: "Menu",
+      items: (filter, infiniteScrollProps) => listOfNum,
+
+
+      decoratorProps: DropDownDecoratorProps(
+
+
+        baseStyle: TextStyle(
+          color: Colors.red,
+          fontWeight: FontWeight.w400,
+          fontSize: 18,
+        ),
+
+        decoration: InputDecoration(
+
+
+            filled: true,
+            fillColor: Colors.white,
+            hintText: 'Hint: multiselection ',
+            hintStyle: TextStyle(
+                color:Colors.blueGrey
+            ),
+            border: InputBorder.none,
+            isDense: true,
+            contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 0)
+        ),
+      ),
+      popupProps: PopupPropsMultiSelection.dialog(
+
+        title: Container(
+          decoration: BoxDecoration(color: Colors.blue),
+          alignment: Alignment.center,
+          padding: EdgeInsets.symmetric(vertical: 16),
+          child: Text(
+            'Numbers 1..30',
+            style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold, color: Colors.white70),
+          ),
+        ),
+
+        showSearchBox: true,
+        searchDelay: Duration(milliseconds: 200),
+        searchFieldProps: TextFieldProps(
+            padding:  EdgeInsets.all(10),
+            style: TextStyle(fontSize: 16),
+            decoration: InputDecoration(
+              focusedBorder: getBorder(borderColor: Colors.white),
+              enabledBorder: getBorder(borderColor: Colors.white),
+            )
+        ),
+
+
+        dialogProps: DialogProps(
+          insetPadding: EdgeInsets.only(top: 20,left: 28,right: 28),
+          backgroundColor: Colors.blue,
+          contentPadding: EdgeInsets.all(10),
+          shape: RoundedRectangleBorder(),
+
+        ),
+
+        checkBoxBuilder: (context , s ,t,selected){
+
+          return selected? Icon(Icons.check_box_outlined,color: Colors.white,)
+              :Icon(Icons.square_outlined,color: Colors.white,);
+        },
+
+        itemBuilder: (context, item, isDisabled, isSelected) => Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+              item,
+              style: TextStyle(color: Colors.white, fontSize: 18)
+          ),
+        ),
+
+
+      ),
+
+
+
+      dropdownBuilder: (context, selectedItem) {
+
+        return Wrap(
+          spacing: 8.0,
+          children: selectedItem.map((item) {
+            return Chip(
+              padding: EdgeInsets.only(left: 6),
+              label: Row(
+                mainAxisSize:MainAxisSize.min,
+                children: [
+                  Text(item),
+                  InkWell(
+                    onTap: (){
+                      print('object');
+
+                      List<String> updatedList = List.from(selectedItem);
+                      updatedList.remove(item);
+
+
+                      dropDownKey.currentState?.clear();
+
+
+                    },
+                    child: Icon(Icons.clear,size: 20,),
+                  )
+                ],
+              ), // Display each item separately
+              backgroundColor: Colors.blue.shade100,
+              labelStyle: TextStyle(color: Colors.black),
+            );
+          }).toList(),
+        );
+      },
     );
   }
 
