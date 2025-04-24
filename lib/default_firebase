@@ -178,11 +178,7 @@ class DefaultFirebaseOptions {
     authDomain: '',
     storageBucket: '',
     measurementId: '',
-    apiKey: 'AIzaSyBv61mK29aataq4FEnv77Tp83UaQdYwrxY',
-    appId: '1:34375079795:ios:230c35e2ba4f7ea273d706',
-    messagingSenderId: '34375079795',
-    projectId: 'database-learn-78426',
-    storageBucket: 'database-learn-78426.firebasestorage.app',
+    
    
   );
 
